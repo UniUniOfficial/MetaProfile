@@ -1,0 +1,10 @@
+# misc
+.DS_Store
+
+# npm dependencies
+node_modules
+
+# truffle
+build
+
+
