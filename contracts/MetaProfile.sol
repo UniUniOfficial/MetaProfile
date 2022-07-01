@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
+
 pragma solidity ^0.8.4;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./nft/ERC721Rental.sol";
 
 
-contract MetaProfile is ERC721, ERC721Burnable, Ownable {
+contract MetaProfile is ERC721Rental, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
 
@@ -17,14 +18,11 @@ contract MetaProfile is ERC721, ERC721Burnable, Ownable {
      */
     address private _rental_exchange;
 
-    // Mapping from token ID to the last rental time
-    mapping(uint256 => uint256) private _rental_time;
-
-    constructor() ERC721("MetaProfileID", "MPID") {
+    constructor() ERC721Rental("MetaProfileID", "MPID") {
     }
 
     /**
-     * @dev Everyone can mint its own profile nft.
+     * @dev Everyone can mint his/her own profile nft.
      */
     function mint() public {
         uint256 tokenId = _tokenIdCounter.current();
@@ -33,7 +31,7 @@ contract MetaProfile is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev Everyone has to remint its own profile nfts, when the profile has been updated.
+     * @dev Everyone has to remint his/her own profile nft, after the profile has been updated.
      */
     function remint(uint256 tokenId) public {
         burn(tokenId);
@@ -41,20 +39,11 @@ contract MetaProfile is ERC721, ERC721Burnable, Ownable {
     }
 
     /**
-     * @dev Returns the rental time of the token.
+     * @dev Everyone can burn his/her own profile nft
      */
-    function rentalTimeOf(uint256 tokenId) public view returns (uint256)  {
-        return _rental_time[tokenId];
-    }
-
-    /**
-     * @dev Set the rental time of the token.
-     */
-    function setRentalTime(uint256 tokenId, uint rentalTime) public {
-        uint256 current_rental_time = _rental_time[tokenId];
-        if (rentalTime > current_rental_time) {
-          _rental_time[tokenId] = current_rental_time;
-        }
+    function burn(uint256 tokenId) public virtual {
+        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: caller is not token owner nor approved");
+        _burn(tokenId);
     }
 
     /**
