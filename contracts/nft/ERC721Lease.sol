@@ -29,8 +29,7 @@ contract ERC721Lease is ERC721, ERC721Enumerable {
     }
 
     /**
-     * @notice set the leasee and expires of a NFT
-     * @dev Throws if unauthorized to lease (the token owner or the current leasee)
+     * @dev lease the nft to the leasee, throws if unauthorized to lease (the token owner or the current leasee)
      * or there is a ongoing lease
      * @param tokenId The NFT to get the leasee expires for
      * @param leasee The leasee of the NFT
