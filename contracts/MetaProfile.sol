@@ -2,23 +2,22 @@
 
 pragma solidity ^0.8.4;
 
-import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "./nft/ERC721Rental.sol";
+import "./nft/ERC721Lease.sol";
 
 
-contract MetaProfile is ERC721Rental, Ownable {
+contract MetaProfile is ERC721Lease, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
 
     /**
-     * Approve the rental exchange to update the rental info
+     * Approve the exchange contract to handle tokens
      * in order to save gas fee
      */
-    address private _rental_exchange;
+    address private _exchange;
 
-    constructor() ERC721Rental("MetaProfileID", "MPID") {
+    constructor() ERC721Lease("MetaProfileID", "MPID") {
     }
 
     /**
@@ -39,33 +38,25 @@ contract MetaProfile is ERC721Rental, Ownable {
     }
 
     /**
-     * @dev Everyone can burn his/her own profile nft
-     */
-    function burn(uint256 tokenId) public virtual {
-        require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: caller is not token owner nor approved");
-        _burn(tokenId);
-    }
-
-    /**
      * @dev Throws if called by any account other than the rental exchange contract.
      */
     modifier onlyRentalExchange() {
-        require(rentalExchange() == _msgSender(), "Rental Exchange: caller is not the current rental exchange contract");
+        require(exchange() == _msgSender(), "Rental Exchange: caller is not the current rental exchange contract");
         _;
     }
 
     /**
-     * @dev Returns the address of the rental exchange contract.
+     * @dev Returns the address of the exchange contract.
      */
-    function rentalExchange() public view returns (address) {
-        return _rental_exchange;
+    function exchange() public view returns (address) {
+        return _exchange;
     }
 
     /**
      * @dev Change the rental exchange contract.
      */
-    function setRentalExchange(address newRentalExchange) public onlyOwner {
-        require(newRentalExchange != address(0), "Rental Exchange: new rental exchange is the zero address");
-        _rental_exchange = newRentalExchange;
+    function setExchange(address newExchange) public onlyOwner {
+        require(newExchange != address(0), "Rental Exchange: new rental exchange is the zero address");
+        _exchange = newExchange;
     }
 }
