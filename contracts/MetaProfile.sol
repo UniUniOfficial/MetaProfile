@@ -40,7 +40,7 @@ contract MetaProfile is ERC721Lease, Ownable {
     /**
      * @dev Throws if called by any account other than the rental exchange contract.
      */
-    modifier onlyRentalExchange() {
+    modifier onlyExchange() {
         require(exchange() == _msgSender(), "Rental Exchange: caller is not the current rental exchange contract");
         _;
     }

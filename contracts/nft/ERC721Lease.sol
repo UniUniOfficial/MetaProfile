@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 
 /*
- * IERC4907 only applies for whole lease pattern
+ * ERC4907 only applies for whole lease pattern
  * But digital crypto nft assets can be leased by many copies of their own
  * So this is a improved interface for multi-copy lease, 
  * and is compatible with with ERC721
@@ -51,23 +51,21 @@ contract ERC721Lease is ERC721, ERC721Enumerable {
     }
 
     /**
-     * @notice Get the leasee expires of an NFT
-     * @dev The zero value indicates that there is no ongoing lease of the leasee
+     * @dev Get the leasee expires of an NFT, the zero value indicates that there is no ongoing lease of the leasee
      * @param tokenId The NFT to get the leasee expires for
      * @param leasee The leasee of the NFT
      * @return expires The leasee expires for this NFT
      */
-    function leaseExpires(uint256 tokenId, address leasee) external view returns(uint256) {
+    function leaseExpiresOf(uint256 tokenId, address leasee) external view returns(uint256) {
         return _lease[tokenId][leasee];
     }
 
     /**
-     * @notice Get the last expires of an NFT among all the leases
-     * @dev The zero value indicates that there is no ongoing lease
+     * @dev Get the last expires of an NFT among all the leases, the zero value indicates that there is no ongoing lease
      * @param tokenId The NFT to get the leasee expires for
      * @return expires the last lease time of the token.
      */
-    function leaseExpires(uint256 tokenId) external view returns (uint256) {
+    function leaseExpiresOf(uint256 tokenId) external view returns (uint256) {
         return _lease_expires[tokenId];
     }
     
