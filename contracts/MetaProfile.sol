@@ -10,7 +10,7 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 
 /*
  * ERC4907 only applies for whole lease pattern
- * But digital crypto nft assets can be leased by many copies of their own
+ * But digital crypto NFTs' assets can be leased by many copies of their own
  * So this is a improved interface for multi-copy lease, 
  * and is compatible with with ERC721
  */
@@ -18,6 +18,9 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     // Generate Token ID
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
+
+    // Mapping from token ID to whether the NFT is allowed to sublease
+    mapping(uint256 => bool) private _subleaseAllowed;
 
     // Mapping from token ID to the last expires of all the leases
     mapping(uint256 => uint256) private _leaseExpires;
@@ -47,18 +50,19 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     /**
      * @dev Everyone can mint his/her own profile nft.
      */
-    function mint() public {
+    function mint(bool isSubleaseAllowed) public {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(_msgSender(), tokenId);
+        _subleaseAllowed[tokenId] = isSubleaseAllowed;
     }
 
     /**
      * @dev Everyone has to remint his/her own profile NFT, after the profile has been updated.
      */
-    function remint(uint256 tokenId) public {
+    function remint(uint256 tokenId, bool isSubleaseAllowed) public {
         burn(tokenId);
-        mint();
+        mint(isSubleaseAllowed);
     }
     
     /**
@@ -137,13 +141,14 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         address sender = _msgSender();
         address owner = ERC721.ownerOf(tokenId);
         return (
-            (
+            _subleaseAllowed[tokenId] 
+            && _lease[tokenId][Leasee] > block.timestamp
+            && (
                 sender == Leasee
                 || isApprovedForAll(owner, sender) 
                 || getApproved(tokenId) == sender
                 || sender == _exchange
             )
-            && _lease[tokenId][Leasee] > block.timestamp
         );
     }
 
