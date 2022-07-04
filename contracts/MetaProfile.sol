@@ -72,6 +72,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: caller is not token owner nor approved");
         require(_leaseExpires[tokenId] < block.timestamp, "Lease: there is a ongoing lease at least");
         _burn(tokenId);
+        delete _subleaseAllowed[tokenId];
     }
 
     /**
@@ -110,6 +111,18 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         }
         
         emit Lease(tokenId, leasee, expires);
+    }
+
+    /**
+     * @dev Returns whether the NFT is allowed to sublease
+     *
+     * Requirements:
+     *
+     * - `tokenId` must exist.
+     */
+    function isAllowedForSublease(uint256 tokenId) public view virtual returns (bool) {
+        require(_exists(tokenId), "ERC721: invalid token ID");
+        return _subleaseAllowed[tokenId];
     }
 
     /**
