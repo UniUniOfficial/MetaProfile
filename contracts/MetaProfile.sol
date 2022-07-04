@@ -33,7 +33,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      */
     event Lease(uint256 indexed tokenId, address indexed leasee, uint256 expires);
 
-     /**
+    /**
      * @notice Emitted when the sublease of a NFT happened
      */
     event Sublease(uint256 indexed tokenId, address indexed oldLeasee, address indexed newLeasee, uint256 expires);
@@ -106,8 +106,8 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         
         _setLastLeaseExpires(tokenId, expires);
 
-        uint256 current_expires = _lease[tokenId][leasee];
-        if (current_expires < expires) {
+        uint256 currentExpires = _lease[tokenId][leasee];
+        if (currentExpires < expires) {
             _lease[tokenId][leasee] = expires;
         }
         
@@ -136,7 +136,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         require(_isApprovedOrLeasee(oldLeasee, tokenId), "Lease: caller is not the current leasee");
 
         _lease[tokenId][newLeasee] = _lease[tokenId][oldLeasee];
-        _lease[tokenId][oldLeasee] = 0;
+        delete _lease[tokenId][oldLeasee];
 
         emit Sublease(tokenId, oldLeasee, newLeasee, _lease[tokenId][newLeasee]);
     }
@@ -155,7 +155,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         address sender = _msgSender();
         address owner = ERC721.ownerOf(tokenId);
         return (
-            _subleaseAllowed[tokenId] 
+            _subleaseAllowed[tokenId]
             && _lease[tokenId][Leasee] > block.timestamp
             && (
                 sender == Leasee
