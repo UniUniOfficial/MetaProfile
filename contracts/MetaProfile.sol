@@ -30,8 +30,13 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      */
     event Lease(uint256 indexed tokenId, address indexed leasee, uint256 expires);
 
+     /**
+     * @notice Emitted when the sublease of a NFT happened
+     */
+    event Sublease(uint256 indexed tokenId, address indexed oldLeasee, address indexed newLeasee, uint256 expires);
+
     /**
-     * Approve the exchange contract to handle tokens
+     * Approve the exchange contract to handle NFTs
      * in order to save gas fee
      */
     address private _exchange;
@@ -49,7 +54,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev Everyone has to remint his/her own profile nft, after the profile has been updated.
+     * @dev Everyone has to remint his/her own profile NFT, after the profile has been updated.
      */
     function remint(uint256 tokenId) public {
         burn(tokenId);
@@ -57,7 +62,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
     
     /**
-     * @dev Everyone can burn his/her own profile nft
+     * @dev Everyone can burn his/her own profile NFT
      */
     function burn(uint256 tokenId) public {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: caller is not token owner nor approved");
@@ -83,7 +88,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev lease the nft to the leasee, throws if unauthorized to lease (not the token owner)
+     * @dev lease the NFT to the leasee, throws if unauthorized to lease (not the token owner)
      * or there is a ongoing lease
      * @param tokenId The NFT
      * @param leasee The leasee of the NFT
@@ -104,18 +109,18 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev sublease the nft to the next leasee, throws if unauthorized to lease (only the current leasee)
+     * @dev sublease the NFT to the next leasee, throws if unauthorized to lease (only the current leasee)
      * @param tokenId The NFT
-     * @param currentLeasee The current leasee of the NFT
-     * @param nextLeasee The next leasee of the NFT after subleasing
+     * @param oldLeasee The current leasee of the NFT
+     * @param newLeasee The next leasee of the NFT after subleasing
      */
-    function sublease(uint256 tokenId, address currentLeasee, address nextLeasee) external {
-        require(_isApprovedOrLeasee(currentLeasee, tokenId), "Lease: caller is not the current leasee");
+    function sublease(uint256 tokenId, address oldLeasee, address newLeasee) external {
+        require(_isApprovedOrLeasee(oldLeasee, tokenId), "Lease: caller is not the current leasee");
 
-        _lease[tokenId][nextLeasee] = _lease[tokenId][currentLeasee];
-        _lease[tokenId][currentLeasee] = 0;
+        _lease[tokenId][newLeasee] = _lease[tokenId][oldLeasee];
+        _lease[tokenId][oldLeasee] = 0;
 
-        emit Lease(tokenId, nextLeasee, _lease[tokenId][nextLeasee]);
+        emit Sublease(tokenId, oldLeasee, newLeasee, _lease[tokenId][newLeasee]);
     }
 
     /**
@@ -126,23 +131,19 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev Returns whether `currentLeasee` is allowed to sublease the NFT.
-     *
-     * Requirements:
-     *
-     * - `tokenId` must exist.
+     * @dev Returns whether `Leasee` is allowed to sublease the NFT.
      */
-    function _isApprovedOrLeasee(address currentLeasee, uint256 tokenId) internal view virtual returns (bool) {
+    function _isApprovedOrLeasee(address Leasee, uint256 tokenId) internal view virtual returns (bool) {
         address sender = _msgSender();
         address owner = ERC721.ownerOf(tokenId);
         return (
             (
-                sender == currentLeasee
+                sender == Leasee
                 || isApprovedForAll(owner, sender) 
                 || getApproved(tokenId) == sender
                 || sender == _exchange
             )
-            && _lease[tokenId][currentLeasee] > block.timestamp
+            && _lease[tokenId][Leasee] > block.timestamp
         );
     }
 
