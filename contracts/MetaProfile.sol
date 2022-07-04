@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity ^0.8.4;
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
@@ -72,11 +72,12 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: caller is not token owner nor approved");
         require(_leaseExpires[tokenId] < block.timestamp, "Lease: there is a ongoing lease at least");
         _burn(tokenId);
-        delete _subleaseAllowed[tokenId];
+        // not do delete action actually so as to save gas fee
+        // delete _subleaseAllowed[tokenId];
     }
 
     /**
-     * @dev overrides the tranfer logic that the token is not allowed to transfer
+     * @dev overrides the tranfer logic that the NFT is not allowed to transfer
      * if there is a ongoing lease
      */
     function _transfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
@@ -141,7 +142,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev overrides approval logic, permit preset the exchange contract to handle the NFT
+     * @dev overrides approval logic, permit the preset exchange contract to handle the NFT
      */
     function _isApprovedOrOwner(address sender, uint256 tokenId) internal view override(ERC721) returns (bool) {
         return super._isApprovedOrOwner(sender, tokenId) || sender == _exchange;
@@ -185,7 +186,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
     
     /**
-     * @dev Set the last lease expires of the token.
+     * @dev Set the last lease expires of the NFT.
      */
     function _setLastLeaseExpires(uint256 tokenId, uint256 expires) internal {
         uint256 currentLastLeaseTime = _leaseExpires[tokenId];
