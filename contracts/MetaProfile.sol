@@ -198,6 +198,13 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
+     * @dev overrides Base URI for computing {tokenURI}.
+     */
+    function _baseURI() internal view virtual override(ERC721) returns (string memory) {
+        return "https://metaid.io/";
+    }
+
+    /**
      * @dev Returns the address of the exchange contract.
      */
     function exchange() public view returns (address) {
