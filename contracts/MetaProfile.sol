@@ -122,7 +122,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      *
      * - `tokenId` must exist.
      */
-    function isAllowedForSublease(uint256 tokenId) public view virtual returns (bool) {
+    function isAllowedForSublease(uint256 tokenId) public view returns (bool) {
         require(_exists(tokenId), "ERC721: invalid token ID");
         return _subleaseAllowed[tokenId];
     }
