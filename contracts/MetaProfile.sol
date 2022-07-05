@@ -51,8 +51,8 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @dev Everyone can mint his/her own profile nft.
      */
     function mint(bool isSubleaseAllowed) public {
-        uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
+        uint256 tokenId = _tokenIdCounter.current();
         _safeMint(_msgSender(), tokenId);
         _subleaseAllowed[tokenId] = isSubleaseAllowed;
     }
@@ -173,6 +173,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @return expires The leasee expires for this NFT
      */
     function leaseExpiresOf(uint256 tokenId, address leasee) external view returns(uint256) {
+        require(_exists(tokenId), "ERC721: invalid token ID");
         return _lease[tokenId][leasee];
     }
 
@@ -182,6 +183,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @return expires the last lease time of the token.
      */
     function leaseExpiresOf(uint256 tokenId) external view returns (uint256) {
+        require(_exists(tokenId), "ERC721: invalid token ID");
         return _leaseExpires[tokenId];
     }
     
@@ -206,7 +208,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @dev Change the rental exchange contract.
      */
     function setExchange(address newExchange) public onlyOwner {
-        require(newExchange != address(0), "Rental Exchange: new rental exchange is the zero address");
+        require(newExchange != address(0), "Rental Exchange: new exchange contract is the zero address");
         _exchange = newExchange;
     }
 }
