@@ -133,7 +133,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @param newLeasee The next leasee of the NFT after subleasing
      */
     function sublease(uint256 tokenId, address oldLeasee, address newLeasee) external {
-        require(_isApprovedOrLeasee(oldLeasee, tokenId), "Lease: caller is not the current leasee");
+        require(_isApprovedAndLeasee(oldLeasee, tokenId), "Lease: caller is not the current leasee");
 
         _lease[tokenId][newLeasee] = _lease[tokenId][oldLeasee];
         delete _lease[tokenId][oldLeasee];
@@ -151,7 +151,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     /**
      * @dev Returns whether `Leasee` is allowed to sublease the NFT.
      */
-    function _isApprovedOrLeasee(address Leasee, uint256 tokenId) internal view virtual returns (bool) {
+    function _isApprovedAndLeasee(address Leasee, uint256 tokenId) internal view virtual returns (bool) {
         address sender = _msgSender();
         address owner = ERC721.ownerOf(tokenId);
         return (
