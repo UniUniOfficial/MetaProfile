@@ -69,7 +69,7 @@ contract("MetaProfile", function (accounts) {
     const account1 = accounts[1];
     const account2 = accounts[2];
 
-    // Fail to burn
+    // Fail to burn, but allow to transfer
     await mp.mint(false, {from: account1});
     let token_id = 2;
     let expires = timeHelper.getTimestampInSeconds() + 3600;
@@ -77,6 +77,7 @@ contract("MetaProfile", function (accounts) {
     await throwCatch.expectRevert(
       mp.burn(token_id, {from: account1})
     );
+    await mp.transferFrom(account1, account2, token_id, {from: account1})
     
     // burn after expires
     await mp.mint(false, {from: account1});
@@ -86,5 +87,4 @@ contract("MetaProfile", function (accounts) {
     await timeHelper.timeout(3000);
     await mp.burn(token_id, {from: account1})
   });
-
 });
