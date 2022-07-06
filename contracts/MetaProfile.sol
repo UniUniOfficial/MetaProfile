@@ -72,15 +72,6 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         // delete _subleaseAllowed[tokenId];
     }
 
-    /**
-     * @dev overrides the tranfer logic that the NFT is not allowed to transfer
-     * if there is a ongoing lease
-     */
-    function _transfer(address from, address to, uint256 tokenId) internal virtual override(ERC721) {
-        require(_leaseExpires[tokenId] < block.timestamp, "Lease: there is a ongoing lease at least");
-        return super._transfer(from, to, tokenId);
-    }
-
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable) {
         super._beforeTokenTransfer(from, to, tokenId);
     }

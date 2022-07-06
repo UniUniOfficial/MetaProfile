@@ -64,6 +64,9 @@ contract("MetaProfile", function (accounts) {
     await mp.burn(token_id, {from: account1});
     const account1_nft_num = (await mp.balanceOf(account1)).toNumber();
     assert.equal(account1_nft_num, 0, "It shoud have 0 NFT of "+account1);
+    await throwCatch.expectRevert ( 
+      mp.isAllowedForSublease(token_id)
+    )
 
     // Try to burn the NFT of account2
     token_id = 2;
