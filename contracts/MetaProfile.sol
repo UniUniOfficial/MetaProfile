@@ -2,6 +2,7 @@
 
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
@@ -44,7 +45,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      */
     address private _exchange;
 
-    constructor() ERC721("MetaProfileID", "MPID") {
+    constructor() ERC721("Individual MetaProfile", "IMP") {
     }
 
     /**
@@ -216,7 +217,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @dev Change the rental exchange contract.
      */
     function setExchange(address newExchange) public onlyOwner {
-        require(newExchange != address(0), "Rental Exchange: new exchange contract is the zero address");
+        require(Address.isContract(newExchange), "Exchange: new exchange contract must be a contract");
         _exchange = newExchange;
     }
 }
