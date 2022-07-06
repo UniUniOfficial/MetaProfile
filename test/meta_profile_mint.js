@@ -14,7 +14,7 @@ contract("MetaProfile", function (accounts) {
     // Setup owner
     owner = accounts[0];
 
-    // Setup 3 accounts.
+    // Setup accounts.
     const account1 = accounts[1];
     const account2 = accounts[2];
     const account3 = accounts[3];
@@ -51,7 +51,7 @@ contract("MetaProfile", function (accounts) {
     // Setup owner
     owner = accounts[0];
 
-    // Setup 3 accounts.
+    // Setup accounts.
     const account1 = accounts[1];
     const account2 = accounts[2];
     const account3 = accounts[3];
@@ -91,7 +91,7 @@ contract("MetaProfile", function (accounts) {
     // Setup owner
     owner = accounts[0];
 
-    // Setup 3 accounts.
+    // Setup accounts.
     const account1 = accounts[1];
     const account2 = accounts[2];
     const account3 = accounts[3];
