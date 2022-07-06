@@ -2,7 +2,7 @@ const getTimestampInSeconds = function() {
   return Math.floor(Date.now() / 1000)
 }
 
-const setGanacheTime = function(time) {
+const increaseGanacheTime = function(time) {
   return new Promise((resolve, reject) => {
     web3.currentProvider.send({
       jsonrpc: "2.0",
@@ -16,12 +16,12 @@ const setGanacheTime = function(time) {
   })
 }
 
-function timeout(ms) {
+function timelapse(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
  
 module.exports = {
   getTimestampInSeconds,
-  setGanacheTime,
-  timeout
+  increaseGanacheTime,
+  timelapse
 }

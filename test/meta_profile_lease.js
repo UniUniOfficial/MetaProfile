@@ -84,7 +84,7 @@ contract("MetaProfile", function (accounts) {
     token_id = 3;
     expires = timeHelper.getTimestampInSeconds() + 2;
     await mp.lease(token_id, account2, expires, {from: account1});
-    await timeHelper.timeout(3000);
+    await timeHelper.timelapse(3000);
     await mp.burn(token_id, {from: account1})
   });
 });
