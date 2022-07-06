@@ -46,7 +46,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @dev Everyone can mint his/her own profile nft.
      */
     function mint(bool isSubleaseAllowed) public {
-        require(balanceOf(_msgSender()) < 1, "MetaProfile: one address only has one profile NFT");
+        require(balanceOf(_msgSender()) < 1, "MetaProfile: one address can only mint one profile NFT");
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
         _safeMint(_msgSender(), tokenId);
