@@ -39,12 +39,6 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      */
     event Sublease(uint256 indexed tokenId, address indexed oldLeasee, address indexed newLeasee, uint256 expires);
 
-    /**
-     * Approve the exchange contract to handle NFTs
-     * in order to save gas fee
-     */
-    address private _exchange;
-
     constructor() ERC721("Individual MetaProfile", "IMP") {
     }
 
@@ -144,13 +138,6 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev overrides approval logic, permit the preset exchange contract to handle the NFT
-     */
-    function _isApprovedOrOwner(address sender, uint256 tokenId) internal view override(ERC721) returns (bool) {
-        return super._isApprovedOrOwner(sender, tokenId) || sender == _exchange;
-    }
-
-    /**
      * @dev Returns whether `Leasee` is allowed to sublease the NFT.
      */
     function _isApprovedAndLeasee(address Leasee, uint256 tokenId) internal view virtual returns (bool) {
@@ -163,7 +150,6 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
                 sender == Leasee
                 || isApprovedForAll(owner, sender) 
                 || getApproved(tokenId) == sender
-                || sender == _exchange
             )
         );
     }
@@ -204,20 +190,5 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      */
     function _baseURI() internal view virtual override(ERC721) returns (string memory) {
         return "https://metaid.io/";
-    }
-
-    /**
-     * @dev Returns the address of the exchange contract.
-     */
-    function exchange() public view returns (address) {
-        return _exchange;
-    }
-
-    /**
-     * @dev Change the rental exchange contract.
-     */
-    function setExchange(address newExchange) public onlyOwner {
-        require(Address.isContract(newExchange), "Exchange: new exchange contract must be a contract");
-        _exchange = newExchange;
     }
 }
