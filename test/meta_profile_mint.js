@@ -84,47 +84,4 @@ contract("MetaProfile", function (accounts) {
     const totalSupply = (await mp.totalSupply()).toNumber();
     assert.equal(totalSupply, 0, "It should have 0 NFT totally");
   });
-
-  it("it should remint 3 NFTs", async function () {
-    let mp = await MetaProfile.deployed();
-    
-    // Setup owner
-    owner = accounts[0];
-
-    // Setup accounts.
-    const account1 = accounts[1];
-    const account2 = accounts[2];
-    const account3 = accounts[3];
-    const account4 = accounts[4];
-
-    // Try to mint a NFT to account1
-    await mp.mint(false, {from: account1});
-    let token_id = 4;
-    await throwCatch.expectRevert(
-      mp.remint(token_id, true, {from: account4})
-    );
-    await mp.remint(token_id, true, {from: account1});
-    token_id = 5;
-    assert.equal(await mp.isAllowedForSublease(token_id), true, "token:"+token_id+" should be set true");
-
-    // Try to mint a NFT to account2
-    await mp.mint(false, {from: account2});
-    token_id = 6;
-    await mp.remint(token_id, true, {from: account2});
-    token_id = 7;
-    assert.equal(await mp.isAllowedForSublease(token_id), true, "token:"+token_id+" should be set true");
-
-    // Try to mint a NFT to account3
-    await mp.mint(false, {from: account3});
-    token_id = 8;
-    await mp.remint(token_id, true, {from: account3});
-    token_id = 9;
-    assert.equal(await mp.isAllowedForSublease(token_id), true, "token:"+token_id+" should be set true");
-    await mp.mint(true, {from: account3});
-    assert.equal(await mp.balanceOf(account3), 2, account3+" should have 2 NFTs totally");
-
-    // Check the contract state
-    const totalSupply = (await mp.totalSupply()).toNumber();
-    assert.equal(totalSupply, 4, "It should have 4 NFTs totally");
-  });
 });

@@ -51,14 +51,6 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         _safeMint(_msgSender(), tokenId);
         _subleaseAllowed[tokenId] = isSubleaseAllowed;
     }
-
-    /**
-     * @dev Everyone has to remint his/her own profile NFT, after the profile has been updated.
-     */
-    function remint(uint256 tokenId, bool isSubleaseAllowed) public {
-        burn(tokenId);
-        mint(isSubleaseAllowed);
-    }
     
     /**
      * @dev Everyone can burn his/her own profile NFT
