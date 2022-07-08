@@ -3,11 +3,7 @@ const timeHelper = require('./helper/time.js');
 
 const MetaProfile = artifacts.require("MetaProfile");
 
-/*
- * uncomment accounts to access the test accounts made available by the
- * Ethereum client
- * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
- */
+
 contract("MetaProfile", function (accounts) {
   it("it should lease one NFT to two other addresses", async function () {
     let mp = await MetaProfile.deployed();

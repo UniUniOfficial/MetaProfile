@@ -111,7 +111,8 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @param newLeasee The next leasee of the NFT after subleasing
      */
     function sublease(uint256 tokenId, address oldLeasee, address newLeasee) external {
-        require(_isApprovedAndLeasee(oldLeasee, tokenId), "Lease: caller is not the current leasee");
+        require(_subleaseAllowed[tokenId], "Sublease: the NFT is not allowed to sublease");
+        require(_isApprovedAndLeasee(oldLeasee, tokenId), "Sublease: caller is not the current leasee or approved");
 
         _lease[tokenId][newLeasee] = _lease[tokenId][oldLeasee];
         delete _lease[tokenId][oldLeasee];
@@ -126,8 +127,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         address sender = _msgSender();
         address owner = ERC721.ownerOf(tokenId);
         return (
-            _subleaseAllowed[tokenId]
-            && _lease[tokenId][Leasee] > block.timestamp
+            _lease[tokenId][Leasee] > block.timestamp
             && (
                 sender == Leasee
                 || isApprovedForAll(owner, sender) 
@@ -171,6 +171,6 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @dev overrides Base URI for computing {tokenURI}.
      */
     function _baseURI() internal view virtual override(ERC721) returns (string memory) {
-        return "https://metaid.io/";
+        return "https://metaid.io/profile/";
     }
 }

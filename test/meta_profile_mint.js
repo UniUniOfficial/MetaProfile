@@ -2,11 +2,7 @@ const throwCatch = require('./helper/throw.js');
 
 const MetaProfile = artifacts.require("MetaProfile");
 
-/*
- * uncomment accounts to access the test accounts made available by the
- * Ethereum client
- * See docs: https://www.trufflesuite.com/docs/truffle/testing/writing-tests-in-javascript
- */
+
 contract("MetaProfile", function (accounts) {
   it("it should mint 3 new NFTs", async function () {
     let mp = await MetaProfile.deployed();
