@@ -45,11 +45,12 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     /**
      * @dev Everyone can mint his/her own profile nft.
      */
-    function mint(bool isSubleaseAllowed) public {
+    function mint(bool isSubleaseAllowed) public returns (uint256) {
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
         _safeMint(_msgSender(), tokenId);
         _subleaseAllowed[tokenId] = isSubleaseAllowed;
+        return tokenId;
     }
     
     /**
