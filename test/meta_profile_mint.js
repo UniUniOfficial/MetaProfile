@@ -54,7 +54,7 @@ contract("MetaProfile", function (accounts) {
 
     // Try to burn the NFT of account2
     token_id = 2;
-    await throwCatch.expectRevert (
+    await throwCatch.expectRevert(
       mp.burn(token_id, {from: account1})
     )
     await mp.burn(token_id, {from: account2});
@@ -70,5 +70,34 @@ contract("MetaProfile", function (accounts) {
     // Check the contract state
     const totalSupply = (await mp.totalSupply()).toNumber();
     assert.equal(totalSupply, 0, "It should have 0 NFT totally");
+  });
+
+  it("the creators should remain the same", async function () {
+    let mp = await MetaProfile.deployed();
+    
+    // Setup owner
+    owner = accounts[0];
+
+    // Setup accounts.
+    const account1 = accounts[1];
+    const account2 = accounts[2];
+    const account3 = accounts[3];
+
+    // Try to burn the NFT of account1
+    await mp.mint({from: account1});
+    const account1_nft_num = (await mp.balanceOf(account1)).toNumber();
+    assert.equal(account1_nft_num, 1, "It doesn't mint 1 NFT of "+account1);
+
+    // The creator remains the same
+    let token_id = 4;
+    await mp.transferFrom(account1, account2, token_id, {from: account1});
+    const address = await mp.creatorOf(token_id);
+    assert.equal(address, account1, "the creators of "+token_id+" should remain the same");
+
+    // Exception after burned
+    await mp.burn(token_id, {from: account2});
+    await throwCatch.expectRevert(
+      mp.creatorOf(token_id)
+    );
   });
 });
