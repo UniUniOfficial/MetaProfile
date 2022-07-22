@@ -16,6 +16,9 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     // Mapping from token ID to creator
     mapping(uint256 => address) private _creators;
 
+    // the mint status, if false, no more nft is allowed to mint
+    bool public mintPermitted = true;
+
     constructor() ERC721("UniUni MetaProfile", "UUMP") {
     }
 
@@ -23,6 +26,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
      * @dev Everyone can mint his/her own profile nft.
      */
     function mint() public {
+        require(mintPermitted, "Mint: the NFT contract is locked up forever");
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
         _safeMint(msg.sender, tokenId);
@@ -37,6 +41,13 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         _burn(tokenId);
         // not do delete action actually so as to save gas fee
         // delete _creators[tokenId];
+    }
+
+    /**
+     * @dev after the call, no NFT is allowed to mint
+     */
+    function lockup() external onlyOwner {
+        mintPermitted = false;
     }
 
     /**

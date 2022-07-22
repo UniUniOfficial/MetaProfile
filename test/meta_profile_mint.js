@@ -100,4 +100,25 @@ contract("MetaProfile", function (accounts) {
       mp.creatorOf(token_id)
     );
   });
+
+  it("the NFT contract should be locked up forever", async function () {
+    let mp = await MetaProfile.deployed();
+    
+    // Setup owner
+    owner = accounts[0];
+
+    // Setup accounts.
+    const account1 = accounts[1];
+    const account2 = accounts[2];
+    const account3 = accounts[3];
+
+    // Try to burn the NFT of account1
+    await throwCatch.expectRevert(
+      mp.lockup({from: account1})
+    );
+    await mp.lockup({from: owner});
+    await throwCatch.expectRevert(
+      mp.mint({from: account1})
+    );
+  });
 });
