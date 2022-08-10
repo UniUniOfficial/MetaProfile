@@ -13,10 +13,10 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
 
-    // Mapping from token ID to creator
+    // Mapping from Token ID to creator
     mapping(uint256 => address) private _creators;
 
-    // the mint status, if false, no more nft is allowed to mint
+    // Mint status, if false, no more nft is allowed to mint
     bool public mintPermitted = true;
 
     constructor() ERC721("UniUni MetaProfile", "UUMP") {
@@ -44,7 +44,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev after the call, no NFT is allowed to mint
+     * @dev After the call, no NFT is allowed to mint
      */
     function lockup() external onlyOwner {
         mintPermitted = false;
