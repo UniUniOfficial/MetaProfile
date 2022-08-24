@@ -72,7 +72,7 @@ contract("MetaProfile", function (accounts) {
     assert.equal(totalSupply, 0, "It should have 0 NFT totally");
   });
 
-  it("the creators should remain the same", async function () {
+  it("the souls should remain the same", async function () {
     let mp = await MetaProfile.deployed();
     
     // Setup owner
@@ -88,16 +88,16 @@ contract("MetaProfile", function (accounts) {
     const account1_nft_num = (await mp.balanceOf(account1)).toNumber();
     assert.equal(account1_nft_num, 1, "It doesn't mint 1 NFT of "+account1);
 
-    // The creator remains the same
+    // The soul remains the same
     let token_id = 4;
     await mp.transferFrom(account1, account2, token_id, {from: account1});
-    const address = await mp.creatorOf(token_id);
-    assert.equal(address, account1, "the creators of "+token_id+" should remain the same");
+    const address = await mp.soulOf(token_id);
+    assert.equal(address, account1, "the souls of "+token_id+" should remain the same");
 
     // Exception after burned
     await mp.burn(token_id, {from: account2});
     await throwCatch.expectRevert(
-      mp.creatorOf(token_id)
+      mp.soulOf(token_id)
     );
   });
 

@@ -13,8 +13,8 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIdCounter;
 
-    // Mapping from Token ID to creator
-    mapping(uint256 => address) private _creators;
+    // Mapping from Token ID to soul address
+    mapping(uint256 => address) private _souls;
 
     // Mint status, if false, no more nft is allowed to mint
     bool public mintPermitted = true;
@@ -30,7 +30,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
         _safeMint(msg.sender, tokenId);
-        _creators[tokenId] = msg.sender;
+        _souls[tokenId] = msg.sender;
     }
     
     /**
@@ -40,7 +40,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: caller is not token owner nor approved");
         _burn(tokenId);
         // not do delete action actually so as to save gas fee
-        // delete _creators[tokenId];
+        // delete _souls[tokenId];
     }
 
     /**
@@ -51,12 +51,12 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev Get the creator of an NFT, require the NFT exists
+     * @dev Get the soul address of an NFT, require the NFT exists
      * @param tokenId The NFT
      */
-    function creatorOf(uint256 tokenId) external view returns(address) {
+    function soulOf(uint256 tokenId) external view returns(address) {
         require(_exists(tokenId), "ERC721: invalid token ID");
-        return _creators[tokenId];
+        return _souls[tokenId];
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId) internal override(ERC721, ERC721Enumerable) {
