@@ -25,7 +25,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     /**
      * @dev Everyone can mint his/her own profile nft.
      */
-    function mint() public {
+    function mint() external {
         require(mintPermitted, "Mint: the NFT contract is locked up forever");
         _tokenIdCounter.increment();
         uint256 tokenId = _tokenIdCounter.current();
@@ -36,7 +36,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     /**
      * @dev Everyone can burn his/her own profile NFT
      */
-    function burn(uint256 tokenId) public {
+    function burn(uint256 tokenId) external {
         require(_isApprovedOrOwner(_msgSender(), tokenId), "ERC721: caller is not token owner nor approved");
         _burn(tokenId);
         // not do delete action actually so as to save gas fee
