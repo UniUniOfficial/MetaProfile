@@ -83,7 +83,7 @@ contract("MetaProfile", function (accounts) {
     const account2 = accounts[2];
     const account3 = accounts[3];
 
-    // Try to burn the NFT of account1
+    // Try to mint the NFT of account1
     await mp.mint({from: account1});
     const account1_nft_num = (await mp.balanceOf(account1)).toNumber();
     assert.equal(account1_nft_num, 1, "It doesn't mint 1 NFT of "+account1);
@@ -112,7 +112,7 @@ contract("MetaProfile", function (accounts) {
     const account2 = accounts[2];
     const account3 = accounts[3];
 
-    // Try to burn the NFT of account1
+    // Try to lock the contract
     await throwCatch.expectRevert(
       mp.lockup({from: account1})
     );
