@@ -19,7 +19,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     // Mint status, if false, no more nft is allowed to mint
     bool public mintPermitted = true;
 
-    constructor() ERC721("UniUni MetaProfile", "UUMP") {
+    constructor() ERC721("UniUni MetaProfile", "UMP") {
     }
 
     /**
