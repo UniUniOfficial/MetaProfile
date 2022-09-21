@@ -19,7 +19,11 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     // Mint status, if false, no more nft is allowed to mint
     bool public mintPermitted = true;
 
+    // base uri
+    string private _tokenBaseURI;
+
     constructor() ERC721("UniUni MetaProfile", "UMP") {
+        setBaseURI("https://uniuni.io/nft/profile/");
     }
 
     /**
@@ -68,9 +72,16 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     }
 
     /**
-     * @dev overrides Base URI for computing {tokenURI}.
+     * @dev Set Base URI for computing {tokenURI}.
      */
-    function _baseURI() internal view virtual override(ERC721) returns (string memory) {
-        return "https://uniuni.io/nft/profile/";
+    function setBaseURI(string memory uri) public onlyOwner {
+        _tokenBaseURI = uri;
+    }
+
+    /**
+     * @dev Base URI for computing {tokenURI}.
+     */
+    function _baseURI() internal view override virtual returns (string memory) {
+        return _tokenBaseURI;
     }
 }
