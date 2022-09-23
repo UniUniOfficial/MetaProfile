@@ -23,7 +23,7 @@ contract MetaProfile is ERC721, ERC721Enumerable, Ownable {
     string private _tokenBaseURI;
 
     constructor() ERC721("Resume NFT", "RNFT") {
-        setBaseURI("https://uniuni.io/nft/profile/");
+        setBaseURI("https://uniuni.network/nft/profile/");
     }
 
     /**
