@@ -1,10 +1,10 @@
-# profile contract
+# MetaProfile contract
 
 ## Overview
 
 Metaid profile is an NFT collection of profiles which stand for individual informations and careers.
 
-Metaid profile allows users to lease and even sublease their own profiles to employers and hunters in order to find jobs, even can earn the profit of profile without exploited by online recruiting websites.
+Metaid profile allows users to mint and publish their own Resume NFTs to employers and hunters in order to find jobs, even can earn the profit of profile without exploited by online recruiting websites.
 
 ## Testing and Development
 
